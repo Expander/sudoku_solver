@@ -1,0 +1,35 @@
+Sudoku solver
+=============
+
+This is a simple sudoku solver, which (until now) uses a back tracking
+algorithm.
+
+Compilation
+-----------
+
+To compile the program run the command `make'
+
+   $ make
+
+Execution
+---------
+
+The sudokus are stored in .txt files in the sudokus/ directory.  To
+solve one run
+
+   $ ./sudoku_solver -f sudokus/s1.txt
+
+Sudoku text files
+-----------------
+
+The sudoku solver input files are simple text files, where the sudoku
+is stored in a table format where the columns are separated by
+whitespace.  Newlines and lines that begin with `#' are ignored.  See
+sudokus/s1.txt for an example.
+
+Help
+----
+
+To get helg run
+
+  $ ./sudoku_solver --help
