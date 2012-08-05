@@ -65,12 +65,10 @@ void TSudoku::GetNextField(unsigned char row, unsigned char col, unsigned char& 
    new_col = col;
    new_row = row;
    if (col < N_COLS - 1) {
-      new_col = col + 1;
-   } else {
-      if (row != N_ROWS - 1)
-         new_col = 0;
-      if (row < N_ROWS - 1)
-         new_row = row + 1;
+      ++new_col;
+   } else if (row < N_ROWS - 1) {
+      ++new_row;
+      new_col = 0;
    }
 }
 
