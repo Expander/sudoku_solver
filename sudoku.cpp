@@ -35,7 +35,7 @@ void TSudoku::SolveField(unsigned char row, unsigned char col)
    assert(row < N_ROWS && "row out of range");
    assert(col < N_COLS && "col out of range");
    if (fField[row][col] != 0) {
-      if (row == N_ROWS - 1 && col == N_COLS - 1) {
+      if (IsLastField(row, col)) {
          fSolutionFound = true;
          return;
       }
@@ -71,6 +71,11 @@ void TSudoku::NextField(unsigned char row, unsigned char col, unsigned char& new
       if (row < N_ROWS - 1)
          new_row = row + 1;
    }
+}
+
+bool TSudoku::IsLastField(unsigned char row, unsigned char col) const
+{
+   return row == N_ROWS - 1 && col == N_COLS - 1;
 }
 
 bool TSudoku::FieldValueIsValid(unsigned char r, unsigned char c) const

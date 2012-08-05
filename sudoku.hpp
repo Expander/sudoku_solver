@@ -22,7 +22,7 @@ private:
    void SolveField(unsigned char, unsigned char);
    bool FieldValueIsValid(unsigned char, unsigned char) const;
    void NextField(unsigned char, unsigned char, unsigned char&, unsigned char&) const;
-
+   bool IsLastField(unsigned char, unsigned char) const;
 
    field_t fField;
    bool    fSolutionFound;
