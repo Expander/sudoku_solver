@@ -27,10 +27,10 @@ void TSudoku::Solve()
    // find non-empty field
    assert(fField.size() == N_ROWS);
    fSolutionFound = false;
-   TestField(0, 0);
+   SolveField(0, 0);
 }
 
-void TSudoku::TestField(unsigned char row, unsigned char col)
+void TSudoku::SolveField(unsigned char row, unsigned char col)
 {
    assert(row < N_ROWS && "row out of range");
    assert(col < N_COLS && "col out of range");
@@ -42,14 +42,14 @@ void TSudoku::TestField(unsigned char row, unsigned char col)
       // go to next field
       unsigned char new_row, new_col;
       NextField(row, col, new_row, new_col);
-      TestField(new_row, new_col);
+      SolveField(new_row, new_col);
    } else {
       for (unsigned char value = 1; value <= N_ROWS; ++value) {
          fField[row][col] = value;
-         if (FieldIsValid(row, col)) {
+         if (FieldValueIsValid(row, col)) {
             unsigned char new_row, new_col;
             NextField(row, col, new_row, new_col);
-            TestField(new_row, new_col);
+            SolveField(new_row, new_col);
          }
          if (!fSolutionFound)
             fField[row][col] = 0;
@@ -73,7 +73,7 @@ void TSudoku::NextField(unsigned char row, unsigned char col, unsigned char& new
    }
 }
 
-bool TSudoku::FieldIsValid(unsigned char r, unsigned char c) const
+bool TSudoku::FieldValueIsValid(unsigned char r, unsigned char c) const
 {
    unsigned char value = fField[r][c];
    assert(value != 0);
@@ -105,7 +105,7 @@ bool TSudoku::SolutionIsValid() const
 {
    for (unsigned char row = 0; row < N_ROWS; ++row) {
       for (unsigned char col = 0; col < N_COLS; ++col) {
-         if (!FieldIsValid(row, col))
+         if (!FieldValueIsValid(row, col))
             return false;
       }
    }

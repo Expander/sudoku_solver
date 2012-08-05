@@ -19,8 +19,8 @@ private:
    typedef std::vector<unsigned char> row_t;
    typedef std::vector<row_t> field_t;
 
-   void TestField(unsigned char, unsigned char);
-   bool FieldIsValid(unsigned char, unsigned char) const;
+   void SolveField(unsigned char, unsigned char);
+   bool FieldValueIsValid(unsigned char, unsigned char) const;
    void NextField(unsigned char, unsigned char, unsigned char&, unsigned char&) const;
 
 
