@@ -10,6 +10,9 @@ public:
    TSudoku(const std::string&);
    ~TSudoku();
 
+   void Solve();
+   bool SolutionIsValid() const;
+
    friend std::ostream& operator<<(std::ostream&, const TSudoku&);
 
 private:
@@ -19,8 +22,13 @@ private:
    void LoadFromFile(const std::string&);
    row_t CreateRow(const std::vector<std::string>&) const;
    std::vector<std::string> Split(const std::string&) const;
+   void TestField(unsigned char, unsigned char);
+   bool FieldIsValid(unsigned char, unsigned char) const;
+   void NextField(unsigned char, unsigned char, unsigned char&, unsigned char&) const;
+
 
    field_t fField;
+   bool    fSolutionFound;
 };
 
 std::ostream& operator<<(std::ostream&, const TSudoku&);
