@@ -19,9 +19,6 @@ private:
    typedef std::vector<unsigned char> row_t;
    typedef std::vector<row_t> field_t;
 
-   void LoadFromFile(const std::string&);
-   row_t CreateRow(const std::vector<std::string>&) const;
-   std::vector<std::string> Split(const std::string&) const;
    void TestField(unsigned char, unsigned char);
    bool FieldIsValid(unsigned char, unsigned char) const;
    void NextField(unsigned char, unsigned char, unsigned char&, unsigned char&) const;
