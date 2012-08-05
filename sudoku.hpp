@@ -21,8 +21,10 @@ private:
 
    void SolveField(unsigned char, unsigned char);
    bool FieldValueIsValid(unsigned char, unsigned char) const;
-   void NextField(unsigned char, unsigned char, unsigned char&, unsigned char&) const;
+   void GetNextField(unsigned char, unsigned char, unsigned char&, unsigned char&) const;
    bool IsLastField(unsigned char, unsigned char) const;
+   bool FieldIsSolved(unsigned char, unsigned char) const;
+   void ClearField(unsigned char, unsigned char);
 
    field_t fField;
    bool    fSolutionFound;

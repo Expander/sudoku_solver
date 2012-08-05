@@ -34,32 +34,33 @@ void TSudoku::SolveField(unsigned char row, unsigned char col)
 {
    assert(row < N_ROWS && "row out of range");
    assert(col < N_COLS && "col out of range");
-   if (fField[row][col] != 0) {
+   if (FieldIsSolved(row, col)) {
       if (IsLastField(row, col)) {
          fSolutionFound = true;
          return;
       }
       // go to next field
       unsigned char new_row, new_col;
-      NextField(row, col, new_row, new_col);
+      GetNextField(row, col, new_row, new_col);
       SolveField(new_row, new_col);
    } else {
+      // try values from 1 to N_ROWS
       for (unsigned char value = 1; value <= N_ROWS; ++value) {
          fField[row][col] = value;
          if (FieldValueIsValid(row, col)) {
             unsigned char new_row, new_col;
-            NextField(row, col, new_row, new_col);
+            GetNextField(row, col, new_row, new_col);
             SolveField(new_row, new_col);
          }
          if (!fSolutionFound)
-            fField[row][col] = 0;
+            ClearField(row, col);
          else
             return;
       }
    }
 }
 
-void TSudoku::NextField(unsigned char row, unsigned char col, unsigned char& new_row, unsigned char& new_col) const
+void TSudoku::GetNextField(unsigned char row, unsigned char col, unsigned char& new_row, unsigned char& new_col) const
 {
    new_col = col;
    new_row = row;
@@ -78,20 +79,33 @@ bool TSudoku::IsLastField(unsigned char row, unsigned char col) const
    return row == N_ROWS - 1 && col == N_COLS - 1;
 }
 
+bool TSudoku::FieldIsSolved(unsigned char row, unsigned char col) const
+{
+   return fField[row][col] != 0;
+}
+
+void TSudoku::ClearField(unsigned char row, unsigned char col)
+{
+   fField[row][col] = 0;
+}
+
 bool TSudoku::FieldValueIsValid(unsigned char r, unsigned char c) const
 {
    unsigned char value = fField[r][c];
-   assert(value != 0);
+   assert(FieldIsSolved(r, c) && "field is not solved");
+
    // check if value appears in row
    for (unsigned char row = 0; row < N_ROWS; ++row) {
       if (row != r && fField[row][c] == value)
          return false;
    }
+
    // check if value appears in column
    for (unsigned char col = 0; col < N_COLS; ++col) {
       if (col != c && fField[r][col] == value)
          return false;
    }
+
    // check if value appears in sub-square
    const unsigned char sub_row_start = 3 * (r / 3);
    const unsigned char sub_row_end   = sub_row_start + 3;
