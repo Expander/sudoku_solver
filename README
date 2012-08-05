@@ -1,7 +1,7 @@
 Sudoku solver
 =============
 
-This is a simple sudoku solver, which (until now) uses a back tracking
+This is a simple sudoku solver, which (until now) uses a brute force
 algorithm.
 
 Compilation
