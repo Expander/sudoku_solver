@@ -11,10 +11,10 @@
 #include <cassert>
 
 template <unsigned char nRows, unsigned char nCols>
-class TSudokuReader {
+class TSudokuFileReader {
 public:
-   TSudokuReader() {}
-   ~TSudokuReader() {}
+   TSudokuFileReader() {}
+   ~TSudokuFileReader() {}
 
    typedef std::vector<unsigned char> row_t;
    typedef std::vector<row_t> grid_t;
@@ -27,8 +27,8 @@ private:
 };
 
 template <unsigned char nRows, unsigned char nCols>
-typename TSudokuReader<nRows, nCols>::grid_t
-TSudokuReader<nRows, nCols>::Read(const std::string& sudokuFileName)
+typename TSudokuFileReader<nRows, nCols>::grid_t
+TSudokuFileReader<nRows, nCols>::Read(const std::string& sudokuFileName)
 {
    grid_t field;
    std::ifstream ifs(sudokuFileName.c_str());
@@ -64,8 +64,8 @@ TSudokuReader<nRows, nCols>::Read(const std::string& sudokuFileName)
 }
 
 template <unsigned char nRows, unsigned char nCols>
-typename TSudokuReader<nRows, nCols>::row_t
-TSudokuReader<nRows, nCols>::CreateRow(const std::vector<std::string>& tokens) const
+typename TSudokuFileReader<nRows, nCols>::row_t
+TSudokuFileReader<nRows, nCols>::CreateRow(const std::vector<std::string>& tokens) const
 {
    row_t row;
    for (std::vector<std::string>::const_iterator it = tokens.begin(),
@@ -90,7 +90,7 @@ TSudokuReader<nRows, nCols>::CreateRow(const std::vector<std::string>& tokens) c
 
 template <unsigned char nRows, unsigned char nCols>
 std::vector<std::string>
-TSudokuReader<nRows, nCols>::Split(const std::string& istr) const
+TSudokuFileReader<nRows, nCols>::Split(const std::string& istr) const
 {
    std::istringstream streamline(istr.c_str());
    std::vector<std::string> tokens;

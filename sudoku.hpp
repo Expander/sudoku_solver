@@ -2,7 +2,7 @@
 #ifndef SUDOKU_H
 #define SUDOKU_H
 
-#include "sudoku_reader.hpp"
+#include "sudoku_file_reader.hpp"
 
 #include <string>
 #include <vector>
@@ -45,7 +45,7 @@ TSudoku<nRows, nCols>::TSudoku(const std::string& sudokuFileName)
    : fGrid()
    , fSolutionFound(false)
 {
-   TSudokuReader<nRows, nCols> sudokuReader;
+   TSudokuFileReader<nRows, nCols> sudokuReader;
    fGrid = sudokuReader.Read(sudokuFileName);
 }
 
