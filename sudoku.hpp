@@ -9,21 +9,21 @@
 #include <iostream>
 #include <cassert>
 
-template <unsigned char nRows, unsigned char nCols> class TSudoku;
+template <class TReader, unsigned char nRows, unsigned char nCols> class TSudoku;
 
-template <unsigned char nRows, unsigned char nCols>
-std::ostream& operator<<(std::ostream&, const TSudoku<nRows, nCols>&);
+template <class TReader, unsigned char nRows, unsigned char nCols>
+std::ostream& operator<<(std::ostream&, const TSudoku<TReader, nRows, nCols>&);
 
-template <unsigned char nRows = 9, unsigned char nCols = 9>
+template <class TReader, unsigned char nRows = 9, unsigned char nCols = 9>
 class TSudoku {
 public:
-   TSudoku(const std::string&);
+   TSudoku(const TReader&);
    ~TSudoku();
 
    void Solve();
    bool SolutionIsValid() const;
 
-   friend std::ostream& operator<< <> (std::ostream&, const TSudoku<nRows, nCols>&);
+   friend std::ostream& operator<< <> (std::ostream&, const TSudoku<TReader, nRows, nCols>&);
 
 private:
    typedef std::vector<unsigned char> row_t;
@@ -40,22 +40,20 @@ private:
    bool    fSolutionFound;
 };
 
-template <unsigned char nRows, unsigned char nCols>
-TSudoku<nRows, nCols>::TSudoku(const std::string& sudokuFileName)
-   : fGrid()
+template <class TReader, unsigned char nRows, unsigned char nCols>
+TSudoku<TReader, nRows, nCols>::TSudoku(const TReader& reader)
+   : fGrid(reader.Read())
    , fSolutionFound(false)
 {
-   TSudokuFileReader<nRows, nCols> sudokuReader;
-   fGrid = sudokuReader.Read(sudokuFileName);
 }
 
-template <unsigned char nRows, unsigned char nCols>
-TSudoku<nRows, nCols>::~TSudoku()
+template <class TReader, unsigned char nRows, unsigned char nCols>
+TSudoku<TReader, nRows, nCols>::~TSudoku()
 {
 }
 
-template <unsigned char nRows, unsigned char nCols>
-void TSudoku<nRows, nCols>::Solve()
+template <class TReader, unsigned char nRows, unsigned char nCols>
+void TSudoku<TReader, nRows, nCols>::Solve()
 {
    // find non-empty field
    assert(fGrid.size() == nRows);
@@ -63,8 +61,8 @@ void TSudoku<nRows, nCols>::Solve()
    SolveField(0, 0);
 }
 
-template <unsigned char nRows, unsigned char nCols>
-void TSudoku<nRows, nCols>::SolveField(unsigned char row, unsigned char col)
+template <class TReader, unsigned char nRows, unsigned char nCols>
+void TSudoku<TReader, nRows, nCols>::SolveField(unsigned char row, unsigned char col)
 {
    assert(row < nRows && "row out of range");
    assert(col < nCols && "col out of range");
@@ -94,8 +92,8 @@ void TSudoku<nRows, nCols>::SolveField(unsigned char row, unsigned char col)
    }
 }
 
-template <unsigned char nRows, unsigned char nCols>
-void TSudoku<nRows, nCols>::GetNextField(unsigned char row, unsigned char col, unsigned char& new_row, unsigned char& new_col) const
+template <class TReader, unsigned char nRows, unsigned char nCols>
+void TSudoku<TReader, nRows, nCols>::GetNextField(unsigned char row, unsigned char col, unsigned char& new_row, unsigned char& new_col) const
 {
    new_col = col;
    new_row = row;
@@ -107,26 +105,26 @@ void TSudoku<nRows, nCols>::GetNextField(unsigned char row, unsigned char col, u
    }
 }
 
-template <unsigned char nRows, unsigned char nCols>
-bool TSudoku<nRows, nCols>::IsLastField(unsigned char row, unsigned char col) const
+template <class TReader, unsigned char nRows, unsigned char nCols>
+bool TSudoku<TReader, nRows, nCols>::IsLastField(unsigned char row, unsigned char col) const
 {
    return row == nRows - 1 && col == nCols - 1;
 }
 
-template <unsigned char nRows, unsigned char nCols>
-bool TSudoku<nRows, nCols>::FieldIsSolved(unsigned char row, unsigned char col) const
+template <class TReader, unsigned char nRows, unsigned char nCols>
+bool TSudoku<TReader, nRows, nCols>::FieldIsSolved(unsigned char row, unsigned char col) const
 {
    return fGrid[row][col] != 0;
 }
 
-template <unsigned char nRows, unsigned char nCols>
-void TSudoku<nRows, nCols>::ClearField(unsigned char row, unsigned char col)
+template <class TReader, unsigned char nRows, unsigned char nCols>
+void TSudoku<TReader, nRows, nCols>::ClearField(unsigned char row, unsigned char col)
 {
    fGrid[row][col] = 0;
 }
 
-template <unsigned char nRows, unsigned char nCols>
-bool TSudoku<nRows, nCols>::FieldValueIsValid(unsigned char r, unsigned char c) const
+template <class TReader, unsigned char nRows, unsigned char nCols>
+bool TSudoku<TReader, nRows, nCols>::FieldValueIsValid(unsigned char r, unsigned char c) const
 {
    unsigned char value = fGrid[r][c];
    assert(FieldIsSolved(r, c) && "field is not solved");
@@ -157,8 +155,8 @@ bool TSudoku<nRows, nCols>::FieldValueIsValid(unsigned char r, unsigned char c) 
    return true;
 }
 
-template <unsigned char nRows, unsigned char nCols>
-bool TSudoku<nRows, nCols>::SolutionIsValid() const
+template <class TReader, unsigned char nRows, unsigned char nCols>
+bool TSudoku<TReader, nRows, nCols>::SolutionIsValid() const
 {
    for (unsigned char row = 0; row < nRows; ++row) {
       for (unsigned char col = 0; col < nCols; ++col) {
@@ -169,8 +167,8 @@ bool TSudoku<nRows, nCols>::SolutionIsValid() const
    return true;
 }
 
-template <unsigned char nRows, unsigned char nCols>
-std::ostream& operator<<(std::ostream& sout, const TSudoku<nRows, nCols>& sudoku)
+template <class TReader, unsigned char nRows, unsigned char nCols>
+std::ostream& operator<<(std::ostream& sout, const TSudoku<TReader, nRows, nCols>& sudoku)
 {
    assert(sudoku.fGrid.size() == nRows);
    for (unsigned char row = 0; row < nRows; ++row) {

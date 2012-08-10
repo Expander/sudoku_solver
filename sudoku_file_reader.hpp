@@ -13,31 +13,39 @@
 template <unsigned char nRows, unsigned char nCols>
 class TSudokuFileReader {
 public:
-   TSudokuFileReader() {}
+   TSudokuFileReader(const std::string&);
    ~TSudokuFileReader() {}
 
    typedef std::vector<unsigned char> row_t;
    typedef std::vector<row_t> grid_t;
 
-   grid_t Read(const std::string&);
+   grid_t Read() const;
 
 private:
+   std::string fFileName;
+
    row_t CreateRow(const std::vector<std::string>&) const;
    std::vector<std::string> Split(const std::string&) const;
 };
 
 template <unsigned char nRows, unsigned char nCols>
+TSudokuFileReader<nRows, nCols>::TSudokuFileReader(const std::string& fileName)
+   : fFileName(fileName)
+{
+}
+
+template <unsigned char nRows, unsigned char nCols>
 typename TSudokuFileReader<nRows, nCols>::grid_t
-TSudokuFileReader<nRows, nCols>::Read(const std::string& sudokuFileName)
+TSudokuFileReader<nRows, nCols>::Read() const
 {
    grid_t field;
-   std::ifstream ifs(sudokuFileName.c_str());
+   std::ifstream ifs(fFileName.c_str());
    if (!ifs.good()) {
-      std::cerr << "Error: cannot open file: " << sudokuFileName
+      std::cerr << "Error: cannot open file: " << fFileName
                 << std::endl;
       return field;
    }
-   std::cout << "loading file: " << sudokuFileName << std::endl;
+   std::cout << "loading file: " << fFileName << std::endl;
 
    unsigned int nLinesRead = 0;
    while (ifs.good() && nLinesRead < nRows) {
