@@ -11,11 +11,11 @@ namespace {
 }
 
 TSudoku::TSudoku(const std::string& sudokuFileName)
-   : fField()
+   : fGrid()
    , fSolutionFound(false)
 {
    TSudokuReader sudokuReader(N_ROWS, N_COLS);
-   fField = sudokuReader.Read(sudokuFileName);
+   fGrid = sudokuReader.Read(sudokuFileName);
 }
 
 TSudoku::~TSudoku()
@@ -25,7 +25,7 @@ TSudoku::~TSudoku()
 void TSudoku::Solve()
 {
    // find non-empty field
-   assert(fField.size() == N_ROWS);
+   assert(fGrid.size() == N_ROWS);
    fSolutionFound = false;
    SolveField(0, 0);
 }
@@ -46,7 +46,7 @@ void TSudoku::SolveField(unsigned char row, unsigned char col)
    } else {
       // try values from 1 to N_ROWS
       for (unsigned char value = 1; value <= N_ROWS; ++value) {
-         fField[row][col] = value;
+         fGrid[row][col] = value;
          if (FieldValueIsValid(row, col)) {
             unsigned char new_row, new_col;
             GetNextField(row, col, new_row, new_col);
@@ -79,28 +79,28 @@ bool TSudoku::IsLastField(unsigned char row, unsigned char col) const
 
 bool TSudoku::FieldIsSolved(unsigned char row, unsigned char col) const
 {
-   return fField[row][col] != 0;
+   return fGrid[row][col] != 0;
 }
 
 void TSudoku::ClearField(unsigned char row, unsigned char col)
 {
-   fField[row][col] = 0;
+   fGrid[row][col] = 0;
 }
 
 bool TSudoku::FieldValueIsValid(unsigned char r, unsigned char c) const
 {
-   unsigned char value = fField[r][c];
+   unsigned char value = fGrid[r][c];
    assert(FieldIsSolved(r, c) && "field is not solved");
 
    // check if value appears in row
    for (unsigned char row = 0; row < N_ROWS; ++row) {
-      if (row != r && fField[row][c] == value)
+      if (row != r && fGrid[row][c] == value)
          return false;
    }
 
    // check if value appears in column
    for (unsigned char col = 0; col < N_COLS; ++col) {
-      if (col != c && fField[r][col] == value)
+      if (col != c && fGrid[r][col] == value)
          return false;
    }
 
@@ -111,7 +111,7 @@ bool TSudoku::FieldValueIsValid(unsigned char r, unsigned char c) const
    const unsigned char sub_col_end   = sub_col_start + 3;
    for (unsigned char row = sub_row_start; row < sub_row_end; ++row) {
       for (unsigned char col = sub_col_start; col < sub_col_end; ++col) {
-         if (col != c && row != r && fField[row][col] == value)
+         if (col != c && row != r && fGrid[row][col] == value)
             return false;
       }
    }
@@ -131,15 +131,15 @@ bool TSudoku::SolutionIsValid() const
 
 std::ostream& operator<<(std::ostream& sout, const TSudoku& sudoku)
 {
-   assert(sudoku.fField.size() == N_ROWS);
+   assert(sudoku.fGrid.size() == N_ROWS);
    for (unsigned char row = 0; row < N_ROWS; ++row) {
       if (row != 0 && row % 3 == 0)
          sout << "\n";
       for (unsigned char col = 0; col < N_COLS; ++col) {
-         assert(sudoku.fField[row].size() == N_COLS);
+         assert(sudoku.fGrid[row].size() == N_COLS);
          if (col != 0 && col % 3 == 0)
             sout << " ";
-         sout << static_cast<int>(sudoku.fField[row][col]);
+         sout << static_cast<int>(sudoku.fGrid[row][col]);
       }
       sout << "\n";
    }

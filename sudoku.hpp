@@ -17,7 +17,7 @@ public:
 
 private:
    typedef std::vector<unsigned char> row_t;
-   typedef std::vector<row_t> field_t;
+   typedef std::vector<row_t> grid_t;
 
    void SolveField(unsigned char, unsigned char);
    bool FieldValueIsValid(unsigned char, unsigned char) const;
@@ -26,7 +26,7 @@ private:
    bool FieldIsSolved(unsigned char, unsigned char) const;
    void ClearField(unsigned char, unsigned char);
 
-   field_t fField;
+   grid_t  fGrid;
    bool    fSolutionFound;
 };
 

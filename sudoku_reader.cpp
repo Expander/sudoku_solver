@@ -17,9 +17,9 @@ TSudokuReader::~TSudokuReader()
 {
 }
 
-TSudokuReader::field_t TSudokuReader::Read(const std::string& sudokuFileName)
+TSudokuReader::grid_t TSudokuReader::Read(const std::string& sudokuFileName)
 {
-   field_t field;
+   grid_t field;
    std::ifstream ifs(sudokuFileName.c_str());
    if (!ifs.good()) {
       std::cerr << "Error: cannot open file: " << sudokuFileName

@@ -11,9 +11,9 @@ public:
    ~TSudokuReader();
 
    typedef std::vector<unsigned char> row_t;
-   typedef std::vector<row_t> field_t;
+   typedef std::vector<row_t> grid_t;
 
-   field_t Read(const std::string&);
+   grid_t Read(const std::string&);
 
 private:
    unsigned char fNRows;
