@@ -7,7 +7,7 @@
 int main(int argc, char* argv[])
 {
    TOptions options = ParseOptions(argc, argv);
-   TSudoku sudoku(options.sudokuFileName);
+   TSudoku<> sudoku(options.sudokuFileName);
    std::cout << "\n" << sudoku << std::endl;
    sudoku.Solve();
    std::cout << "solution: \n" << sudoku

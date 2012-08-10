@@ -1,6 +1,6 @@
 
 EXECUTABLE = sudoku_solver
-OBJECTS    = options.o sudoku.o sudoku_reader.o
+OBJECTS    = options.o
 CXX        = g++
 CXXFLAGS   = -O3 -Wall -Wextra -pedantic
 
