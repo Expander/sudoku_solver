@@ -81,16 +81,16 @@ TSudokuFileReader<TSudoku>::createRow(const std::vector<std::string>& tokens) co
    row.reserve(nCols);
    for (std::vector<std::string>::const_iterator it = tokens.begin(),
            end = tokens.end(); it != end; ++it) {
-      int value = 0;
+      long value = 0;
       std::istringstream streamToken(*it);
       streamToken >> value;
       if (streamToken.rdstate() & std::istringstream::failbit) {
          std::cerr << "Error: word not convertible to"
-            " unsigned int: " << *it << std::endl;
+            " long: " << *it << std::endl;
          value = 0;
       }
-      if (value < 0 || value > 9) {
-         std::cerr << "Error: value is not within [0,9]: "
+      if (value < 0 || value > nCols) {
+         std::cerr << "Error: value is not within [0," << nCols << "]: "
                    << value << std::endl;
          value = 0;
       }
