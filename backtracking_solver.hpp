@@ -2,33 +2,25 @@
 #ifndef BACKTRACKING_SOLVER_H
 #define BACKTRACKING_SOLVER_H
 
-#include "sudoku_file_reader.hpp"
+#include "sudoku.hpp"
 
-#include <string>
-#include <vector>
-#include <iostream>
 #include <cassert>
 
-template <class TReader, unsigned char nRows, unsigned char nCols> class TBacktrackingSolver;
-
-template <class TReader, unsigned char nRows, unsigned char nCols>
-std::ostream& operator<<(std::ostream&, const TBacktrackingSolver<TReader, nRows, nCols>&);
-
-template <class TReader, unsigned char nRows = 9, unsigned char nCols = 9>
+template <class TSudoku>
 class TBacktrackingSolver {
 public:
-   TBacktrackingSolver(const TReader&);
+   TBacktrackingSolver(const TSudoku&);
    ~TBacktrackingSolver();
 
+   typedef typename TSudoku::row_type row_t;
+   typedef typename TSudoku::grid_type grid_t;
+   enum { nRows = TSudoku::rows, nCols = TSudoku::cols };
+
+   const TSudoku& GetSolution() const;
    void Solve();
    bool SolutionIsValid() const;
 
-   friend std::ostream& operator<< <> (std::ostream&, const TBacktrackingSolver<TReader, nRows, nCols>&);
-
 private:
-   typedef std::vector<unsigned char> row_t;
-   typedef std::vector<row_t> grid_t;
-
    void SolveField(unsigned char, unsigned char);
    bool FieldValueIsValid(unsigned char, unsigned char) const;
    void GetNextField(unsigned char, unsigned char, unsigned char&, unsigned char&) const;
@@ -36,33 +28,38 @@ private:
    bool FieldIsSolved(unsigned char, unsigned char) const;
    void ClearField(unsigned char, unsigned char);
 
-   grid_t  fGrid;
+   TSudoku fSudoku;
    bool    fSolutionFound;
 };
 
-template <class TReader, unsigned char nRows, unsigned char nCols>
-TBacktrackingSolver<TReader, nRows, nCols>::TBacktrackingSolver(const TReader& reader)
-   : fGrid(reader.Read())
+template <class TSudoku>
+TBacktrackingSolver<TSudoku>::TBacktrackingSolver(const TSudoku& sudoku)
+   : fSudoku(sudoku)
    , fSolutionFound(false)
 {
 }
 
-template <class TReader, unsigned char nRows, unsigned char nCols>
-TBacktrackingSolver<TReader, nRows, nCols>::~TBacktrackingSolver()
+template <class TSudoku>
+TBacktrackingSolver<TSudoku>::~TBacktrackingSolver()
 {
 }
 
-template <class TReader, unsigned char nRows, unsigned char nCols>
-void TBacktrackingSolver<TReader, nRows, nCols>::Solve()
+template <class TSudoku>
+const TSudoku& TBacktrackingSolver<TSudoku>::GetSolution() const
+{
+   return fSudoku;
+}
+
+template <class TSudoku>
+void TBacktrackingSolver<TSudoku>::Solve()
 {
    // find non-empty field
-   assert(fGrid.size() == nRows);
    fSolutionFound = false;
    SolveField(0, 0);
 }
 
-template <class TReader, unsigned char nRows, unsigned char nCols>
-void TBacktrackingSolver<TReader, nRows, nCols>::SolveField(unsigned char row, unsigned char col)
+template <class TSudoku>
+void TBacktrackingSolver<TSudoku>::SolveField(unsigned char row, unsigned char col)
 {
    assert(row < nRows && "row out of range");
    assert(col < nCols && "col out of range");
@@ -78,7 +75,7 @@ void TBacktrackingSolver<TReader, nRows, nCols>::SolveField(unsigned char row, u
    } else {
       // try values from 1 to nRows
       for (unsigned char value = 1; value <= nRows; ++value) {
-         fGrid[row][col] = value;
+         fSudoku[row][col] = value;
          if (FieldValueIsValid(row, col)) {
             unsigned char new_row, new_col;
             GetNextField(row, col, new_row, new_col);
@@ -92,8 +89,8 @@ void TBacktrackingSolver<TReader, nRows, nCols>::SolveField(unsigned char row, u
    }
 }
 
-template <class TReader, unsigned char nRows, unsigned char nCols>
-void TBacktrackingSolver<TReader, nRows, nCols>::GetNextField(unsigned char row, unsigned char col, unsigned char& new_row, unsigned char& new_col) const
+template <class TSudoku>
+void TBacktrackingSolver<TSudoku>::GetNextField(unsigned char row, unsigned char col, unsigned char& new_row, unsigned char& new_col) const
 {
    new_col = col;
    new_row = row;
@@ -105,39 +102,39 @@ void TBacktrackingSolver<TReader, nRows, nCols>::GetNextField(unsigned char row,
    }
 }
 
-template <class TReader, unsigned char nRows, unsigned char nCols>
-bool TBacktrackingSolver<TReader, nRows, nCols>::IsLastField(unsigned char row, unsigned char col) const
+template <class TSudoku>
+bool TBacktrackingSolver<TSudoku>::IsLastField(unsigned char row, unsigned char col) const
 {
    return row == nRows - 1 && col == nCols - 1;
 }
 
-template <class TReader, unsigned char nRows, unsigned char nCols>
-bool TBacktrackingSolver<TReader, nRows, nCols>::FieldIsSolved(unsigned char row, unsigned char col) const
+template <class TSudoku>
+bool TBacktrackingSolver<TSudoku>::FieldIsSolved(unsigned char row, unsigned char col) const
 {
-   return fGrid[row][col] != 0;
+   return fSudoku[row][col] != 0;
 }
 
-template <class TReader, unsigned char nRows, unsigned char nCols>
-void TBacktrackingSolver<TReader, nRows, nCols>::ClearField(unsigned char row, unsigned char col)
+template <class TSudoku>
+void TBacktrackingSolver<TSudoku>::ClearField(unsigned char row, unsigned char col)
 {
-   fGrid[row][col] = 0;
+   fSudoku[row][col] = 0;
 }
 
-template <class TReader, unsigned char nRows, unsigned char nCols>
-bool TBacktrackingSolver<TReader, nRows, nCols>::FieldValueIsValid(unsigned char r, unsigned char c) const
+template <class TSudoku>
+bool TBacktrackingSolver<TSudoku>::FieldValueIsValid(unsigned char r, unsigned char c) const
 {
-   unsigned char value = fGrid[r][c];
+   unsigned char value = fSudoku[r][c];
    assert(FieldIsSolved(r, c) && "field is not solved");
 
    // check if value appears in row
    for (unsigned char row = 0; row < nRows; ++row) {
-      if (row != r && fGrid[row][c] == value)
+      if (row != r && fSudoku[row][c] == value)
          return false;
    }
 
    // check if value appears in column
    for (unsigned char col = 0; col < nCols; ++col) {
-      if (col != c && fGrid[r][col] == value)
+      if (col != c && fSudoku[r][col] == value)
          return false;
    }
 
@@ -148,15 +145,15 @@ bool TBacktrackingSolver<TReader, nRows, nCols>::FieldValueIsValid(unsigned char
    const unsigned char sub_col_end   = sub_col_start + 3;
    for (unsigned char row = sub_row_start; row < sub_row_end; ++row) {
       for (unsigned char col = sub_col_start; col < sub_col_end; ++col) {
-         if (col != c && row != r && fGrid[row][col] == value)
+         if (col != c && row != r && fSudoku[row][col] == value)
             return false;
       }
    }
    return true;
 }
 
-template <class TReader, unsigned char nRows, unsigned char nCols>
-bool TBacktrackingSolver<TReader, nRows, nCols>::SolutionIsValid() const
+template <class TSudoku>
+bool TBacktrackingSolver<TSudoku>::SolutionIsValid() const
 {
    for (unsigned char row = 0; row < nRows; ++row) {
       for (unsigned char col = 0; col < nCols; ++col) {
@@ -165,24 +162,6 @@ bool TBacktrackingSolver<TReader, nRows, nCols>::SolutionIsValid() const
       }
    }
    return true;
-}
-
-template <class TReader, unsigned char nRows, unsigned char nCols>
-std::ostream& operator<<(std::ostream& sout, const TBacktrackingSolver<TReader, nRows, nCols>& sudoku)
-{
-   assert(sudoku.fGrid.size() == nRows);
-   for (unsigned char row = 0; row < nRows; ++row) {
-      if (row != 0 && row % 3 == 0)
-         sout << "\n";
-      for (unsigned char col = 0; col < nCols; ++col) {
-         assert(sudoku.fGrid[row].size() == nCols);
-         if (col != 0 && col % 3 == 0)
-            sout << " ";
-         sout << static_cast<int>(sudoku.fGrid[row][col]);
-      }
-      sout << "\n";
-   }
-   return sout;
 }
 
 #endif

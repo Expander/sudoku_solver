@@ -1,6 +1,8 @@
 
-#ifndef SUDOKU_READER_H
-#define SUDOKU_READER_H
+#ifndef SUDOKU_FILE_READER_H
+#define SUDOKU_FILE_READER_H
+
+#include "sudoku.hpp"
 
 #include <string>
 #include <vector>
@@ -10,16 +12,17 @@
 #include <iterator>
 #include <cassert>
 
-template <unsigned char nRows, unsigned char nCols>
+template <class TSudoku>
 class TSudokuFileReader {
 public:
    TSudokuFileReader(const std::string&);
    ~TSudokuFileReader() {}
 
-   typedef std::vector<unsigned char> row_t;
-   typedef std::vector<row_t> grid_t;
+   typedef typename TSudoku::row_type row_t;
+   typedef typename TSudoku::grid_type grid_t;
+   enum { nRows = TSudoku::rows, nCols = TSudoku::cols };
 
-   grid_t Read() const;
+   TSudoku Read() const;
 
 private:
    std::string fFileName;
@@ -28,22 +31,21 @@ private:
    std::vector<std::string> Split(const std::string&) const;
 };
 
-template <unsigned char nRows, unsigned char nCols>
-TSudokuFileReader<nRows, nCols>::TSudokuFileReader(const std::string& fileName)
+template <class TSudoku>
+TSudokuFileReader<TSudoku>::TSudokuFileReader(const std::string& fileName)
    : fFileName(fileName)
 {
 }
 
-template <unsigned char nRows, unsigned char nCols>
-typename TSudokuFileReader<nRows, nCols>::grid_t
-TSudokuFileReader<nRows, nCols>::Read() const
+template <class TSudoku>
+TSudoku TSudokuFileReader<TSudoku>::Read() const
 {
-   grid_t field;
+   TSudoku sudoku;
    std::ifstream ifs(fFileName.c_str());
    if (!ifs.good()) {
       std::cerr << "Error: cannot open file: " << fFileName
                 << std::endl;
-      return field;
+      return sudoku;
    }
    std::cout << "loading file: " << fFileName << std::endl;
 
@@ -53,7 +55,6 @@ TSudokuFileReader<nRows, nCols>::Read() const
       getline(ifs, line);
       if (line == "" || (line.size() > 0 && line[0] == '#'))
          continue;
-      ++nLinesRead;
 
       // split line into tokens
       std::vector<std::string> tokens(Split(line));
@@ -61,19 +62,18 @@ TSudokuFileReader<nRows, nCols>::Read() const
          std::cerr << "Error: malformed line (more than "
                    << static_cast<int>(nCols) << " words): "
                    << line << std::endl;
-         field.clear();
          break;
       }
       assert(tokens.size() == nCols && "too many columns");
-      field.push_back(CreateRow(tokens));
+      sudoku[nLinesRead] = CreateRow(tokens);
+      ++nLinesRead;
    }
-   assert(field.size() == nRows && "field has wrong number of rows");
-   return field;
+   return sudoku;
 }
 
-template <unsigned char nRows, unsigned char nCols>
-typename TSudokuFileReader<nRows, nCols>::row_t
-TSudokuFileReader<nRows, nCols>::CreateRow(const std::vector<std::string>& tokens) const
+template <class TSudoku>
+typename TSudokuFileReader<TSudoku>::row_t
+TSudokuFileReader<TSudoku>::CreateRow(const std::vector<std::string>& tokens) const
 {
    row_t row;
    for (std::vector<std::string>::const_iterator it = tokens.begin(),
@@ -96,9 +96,9 @@ TSudokuFileReader<nRows, nCols>::CreateRow(const std::vector<std::string>& token
    return row;
 }
 
-template <unsigned char nRows, unsigned char nCols>
+template <class TSudoku>
 std::vector<std::string>
-TSudokuFileReader<nRows, nCols>::Split(const std::string& istr) const
+TSudokuFileReader<TSudoku>::Split(const std::string& istr) const
 {
    std::istringstream streamline(istr.c_str());
    std::vector<std::string> tokens;
