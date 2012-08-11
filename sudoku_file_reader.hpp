@@ -18,6 +18,7 @@ public:
    TSudokuFileReader(const std::string&);
    ~TSudokuFileReader() {}
 
+   class TErrorCannotOpenFile {};
    typedef typename TSudoku::value_type value_type;
    typedef typename TSudoku::row_type row_t;
    typedef typename TSudoku::grid_type grid_t;
@@ -41,15 +42,15 @@ TSudokuFileReader<TSudoku>::TSudokuFileReader(const std::string& fileName)
 template <class TSudoku>
 TSudoku TSudokuFileReader<TSudoku>::read() const
 {
-   TSudoku sudoku;
    std::ifstream ifs(fFileName.c_str());
    if (!ifs.good()) {
-      std::cerr << "Error: cannot open file: " << fFileName
-                << std::endl;
-      return sudoku;
+      std::cerr << "Error: cannot open file: \"" << fFileName
+                << "\"" << std::endl;
+      throw TErrorCannotOpenFile();
    }
    std::cout << "loading file: " << fFileName << std::endl;
 
+   TSudoku sudoku;
    unsigned int nLinesRead = 0;
    while (ifs.good() && nLinesRead < nRows) {
       std::string line;

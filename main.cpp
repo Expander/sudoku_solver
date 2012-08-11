@@ -5,6 +5,7 @@
 #include "backtracking_solver.hpp"
 
 #include <iostream>
+#include <cstdlib>
 
 int main(int argc, char* argv[])
 {
@@ -12,7 +13,13 @@ int main(int argc, char* argv[])
 
    typedef TSudoku<unsigned char, 9, 9> sudoku_type;
    TSudokuFileReader<sudoku_type> sudokuFileReader(options.sudokuFileName);
-   sudoku_type sudoku = sudokuFileReader.read();
+   sudoku_type sudoku;
+   try {
+      sudoku = sudokuFileReader.read();
+   } catch (TSudokuFileReader<sudoku_type>::TErrorCannotOpenFile) {
+      printUsage();
+      abort();
+   }
    std::cout << "\n" << sudoku << std::endl;
 
    TBacktrackingSolver<sudoku_type> solver(sudoku);
