@@ -78,6 +78,7 @@ typename TSudokuFileReader<TSudoku>::row_t
 TSudokuFileReader<TSudoku>::createRow(const std::vector<std::string>& tokens) const
 {
    row_t row;
+   row.reserve(nCols);
    for (std::vector<std::string>::const_iterator it = tokens.begin(),
            end = tokens.end(); it != end; ++it) {
       int value = 0;
