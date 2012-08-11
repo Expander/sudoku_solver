@@ -12,6 +12,7 @@ public:
    TBacktrackingSolver(const TSudoku&);
    ~TBacktrackingSolver();
 
+   typedef typename TSudoku::value_type value_type;
    typedef typename TSudoku::row_type row_t;
    typedef typename TSudoku::grid_type grid_t;
    enum { nRows = TSudoku::rows, nCols = TSudoku::cols };
@@ -21,12 +22,12 @@ public:
    bool solutionIsValid() const;
 
 private:
-   void solveField(unsigned char, unsigned char);
-   bool fieldValueIsValid(unsigned char, unsigned char) const;
-   void getNextField(unsigned char, unsigned char, unsigned char&, unsigned char&) const;
-   bool isLastField(unsigned char, unsigned char) const;
-   bool fieldIsSolved(unsigned char, unsigned char) const;
-   void clearField(unsigned char, unsigned char);
+   void solveField(value_type, value_type);
+   bool fieldValueIsValid(value_type, value_type) const;
+   void getNextField(value_type, value_type, value_type&, value_type&) const;
+   bool isLastField(value_type, value_type) const;
+   bool fieldIsSolved(value_type, value_type) const;
+   void clearField(value_type, value_type);
 
    TSudoku fSudoku;
    bool    fSolutionFound;
@@ -59,7 +60,7 @@ void TBacktrackingSolver<TSudoku>::solve()
 }
 
 template <class TSudoku>
-void TBacktrackingSolver<TSudoku>::solveField(unsigned char row, unsigned char col)
+void TBacktrackingSolver<TSudoku>::solveField(value_type row, value_type col)
 {
    assert(row < nRows && "row out of range");
    assert(col < nCols && "col out of range");
@@ -69,15 +70,15 @@ void TBacktrackingSolver<TSudoku>::solveField(unsigned char row, unsigned char c
          return;
       }
       // go to next field
-      unsigned char new_row, new_col;
+      value_type new_row, new_col;
       getNextField(row, col, new_row, new_col);
       solveField(new_row, new_col);
    } else {
       // try values from 1 to nRows
-      for (unsigned char value = 1; value <= nRows; ++value) {
+      for (value_type value = 1; value <= nRows; ++value) {
          fSudoku[row][col] = value;
          if (fieldValueIsValid(row, col)) {
-            unsigned char new_row, new_col;
+            value_type new_row, new_col;
             getNextField(row, col, new_row, new_col);
             solveField(new_row, new_col);
          }
@@ -90,7 +91,7 @@ void TBacktrackingSolver<TSudoku>::solveField(unsigned char row, unsigned char c
 }
 
 template <class TSudoku>
-void TBacktrackingSolver<TSudoku>::getNextField(unsigned char row, unsigned char col, unsigned char& new_row, unsigned char& new_col) const
+void TBacktrackingSolver<TSudoku>::getNextField(value_type row, value_type col, value_type& new_row, value_type& new_col) const
 {
    new_col = col;
    new_row = row;
@@ -103,48 +104,48 @@ void TBacktrackingSolver<TSudoku>::getNextField(unsigned char row, unsigned char
 }
 
 template <class TSudoku>
-bool TBacktrackingSolver<TSudoku>::isLastField(unsigned char row, unsigned char col) const
+bool TBacktrackingSolver<TSudoku>::isLastField(value_type row, value_type col) const
 {
    return row == nRows - 1 && col == nCols - 1;
 }
 
 template <class TSudoku>
-bool TBacktrackingSolver<TSudoku>::fieldIsSolved(unsigned char row, unsigned char col) const
+bool TBacktrackingSolver<TSudoku>::fieldIsSolved(value_type row, value_type col) const
 {
    return fSudoku[row][col] != 0;
 }
 
 template <class TSudoku>
-void TBacktrackingSolver<TSudoku>::clearField(unsigned char row, unsigned char col)
+void TBacktrackingSolver<TSudoku>::clearField(value_type row, value_type col)
 {
    fSudoku[row][col] = 0;
 }
 
 template <class TSudoku>
-bool TBacktrackingSolver<TSudoku>::fieldValueIsValid(unsigned char r, unsigned char c) const
+bool TBacktrackingSolver<TSudoku>::fieldValueIsValid(value_type r, value_type c) const
 {
-   unsigned char value = fSudoku[r][c];
+   value_type value = fSudoku[r][c];
    assert(fieldIsSolved(r, c) && "field is not solved");
 
    // check if value appears in row
-   for (unsigned char row = 0; row < nRows; ++row) {
+   for (value_type row = 0; row < nRows; ++row) {
       if (row != r && fSudoku[row][c] == value)
          return false;
    }
 
    // check if value appears in column
-   for (unsigned char col = 0; col < nCols; ++col) {
+   for (value_type col = 0; col < nCols; ++col) {
       if (col != c && fSudoku[r][col] == value)
          return false;
    }
 
    // check if value appears in sub-square
-   const unsigned char sub_row_start = 3 * (r / 3);
-   const unsigned char sub_row_end   = sub_row_start + 3;
-   const unsigned char sub_col_start = 3 * (c / 3);
-   const unsigned char sub_col_end   = sub_col_start + 3;
-   for (unsigned char row = sub_row_start; row < sub_row_end; ++row) {
-      for (unsigned char col = sub_col_start; col < sub_col_end; ++col) {
+   const value_type sub_row_start = 3 * (r / 3);
+   const value_type sub_row_end   = sub_row_start + 3;
+   const value_type sub_col_start = 3 * (c / 3);
+   const value_type sub_col_end   = sub_col_start + 3;
+   for (value_type row = sub_row_start; row < sub_row_end; ++row) {
+      for (value_type col = sub_col_start; col < sub_col_end; ++col) {
          if (col != c && row != r && fSudoku[row][col] == value)
             return false;
       }
@@ -155,8 +156,8 @@ bool TBacktrackingSolver<TSudoku>::fieldValueIsValid(unsigned char r, unsigned c
 template <class TSudoku>
 bool TBacktrackingSolver<TSudoku>::solutionIsValid() const
 {
-   for (unsigned char row = 0; row < nRows; ++row) {
-      for (unsigned char col = 0; col < nCols; ++col) {
+   for (value_type row = 0; row < nRows; ++row) {
+      for (value_type col = 0; col < nCols; ++col) {
          if (!fieldValueIsValid(row, col))
             return false;
       }

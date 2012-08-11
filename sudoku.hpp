@@ -18,6 +18,7 @@ public:
    ~TSudoku() {}
 
    enum { rows = nRows, cols = nCols };
+   typedef T value_type;
    typedef std::vector<T> row_type;
    typedef std::vector<row_type> grid_type;
 
@@ -56,10 +57,10 @@ template <typename T, T nRows, T nCols>
 std::ostream& operator<<(std::ostream& sout, const TSudoku<T, nRows, nCols>& sudoku)
 {
    assert(sudoku.fGrid.size() == nRows);
-   for (unsigned char row = 0; row < nRows; ++row) {
+   for (T row = 0; row < nRows; ++row) {
       if (row != 0 && row % 3 == 0)
          sout << "\n";
-      for (unsigned char col = 0; col < nCols; ++col) {
+      for (T col = 0; col < nCols; ++col) {
          assert(sudoku.fGrid[row].size() == nCols);
          if (col != 0 && col % 3 == 0)
             sout << " ";

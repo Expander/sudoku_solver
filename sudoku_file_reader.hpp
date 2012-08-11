@@ -18,6 +18,7 @@ public:
    TSudokuFileReader(const std::string&);
    ~TSudokuFileReader() {}
 
+   typedef typename TSudoku::value_type value_type;
    typedef typename TSudoku::row_type row_t;
    typedef typename TSudoku::grid_type grid_t;
    enum { nRows = TSudoku::rows, nCols = TSudoku::cols };
@@ -91,7 +92,7 @@ TSudokuFileReader<TSudoku>::createRow(const std::vector<std::string>& tokens) co
                    << value << std::endl;
          value = 0;
       }
-      row.push_back(static_cast<unsigned char>(value));
+      row.push_back(static_cast<value_type>(value));
    }
    return row;
 }
