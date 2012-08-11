@@ -22,13 +22,13 @@ public:
    typedef typename TSudoku::grid_type grid_t;
    enum { nRows = TSudoku::rows, nCols = TSudoku::cols };
 
-   TSudoku Read() const;
+   TSudoku read() const;
 
 private:
    std::string fFileName;
 
-   row_t CreateRow(const std::vector<std::string>&) const;
-   std::vector<std::string> Split(const std::string&) const;
+   row_t createRow(const std::vector<std::string>&) const;
+   std::vector<std::string> split(const std::string&) const;
 };
 
 template <class TSudoku>
@@ -38,7 +38,7 @@ TSudokuFileReader<TSudoku>::TSudokuFileReader(const std::string& fileName)
 }
 
 template <class TSudoku>
-TSudoku TSudokuFileReader<TSudoku>::Read() const
+TSudoku TSudokuFileReader<TSudoku>::read() const
 {
    TSudoku sudoku;
    std::ifstream ifs(fFileName.c_str());
@@ -57,7 +57,7 @@ TSudoku TSudokuFileReader<TSudoku>::Read() const
          continue;
 
       // split line into tokens
-      std::vector<std::string> tokens(Split(line));
+      std::vector<std::string> tokens(split(line));
       if (tokens.size() != nCols) {
          std::cerr << "Error: malformed line (more than "
                    << static_cast<int>(nCols) << " words): "
@@ -65,7 +65,7 @@ TSudoku TSudokuFileReader<TSudoku>::Read() const
          break;
       }
       assert(tokens.size() == nCols && "too many columns");
-      sudoku[nLinesRead] = CreateRow(tokens);
+      sudoku[nLinesRead] = createRow(tokens);
       ++nLinesRead;
    }
    return sudoku;
@@ -73,7 +73,7 @@ TSudoku TSudokuFileReader<TSudoku>::Read() const
 
 template <class TSudoku>
 typename TSudokuFileReader<TSudoku>::row_t
-TSudokuFileReader<TSudoku>::CreateRow(const std::vector<std::string>& tokens) const
+TSudokuFileReader<TSudoku>::createRow(const std::vector<std::string>& tokens) const
 {
    row_t row;
    for (std::vector<std::string>::const_iterator it = tokens.begin(),
@@ -98,7 +98,7 @@ TSudokuFileReader<TSudoku>::CreateRow(const std::vector<std::string>& tokens) co
 
 template <class TSudoku>
 std::vector<std::string>
-TSudokuFileReader<TSudoku>::Split(const std::string& istr) const
+TSudokuFileReader<TSudoku>::split(const std::string& istr) const
 {
    std::istringstream streamline(istr.c_str());
    std::vector<std::string> tokens;

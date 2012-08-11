@@ -5,7 +5,7 @@
 #include <cstring>
 #include <getopt.h>
 
-TOptions ParseOptions(int argc, char* argv[])
+TOptions parseOptions(int argc, char* argv[])
 {
    TOptions options;
 
@@ -47,13 +47,13 @@ TOptions ParseOptions(int argc, char* argv[])
          options.sudokuFileName = optarg;
          break;
       case 'h':
-         PrintUsage();
+         printUsage();
          exit(0);
       case 'v':
-         PrintVersion();
+         printVersion();
          exit(0);
       default:
-         PrintUsage();
+         printUsage();
          exit(2);
       }
    }
@@ -61,7 +61,7 @@ TOptions ParseOptions(int argc, char* argv[])
    return options;
 }
 
-void PrintUsage(std::ostream& fout)
+void printUsage(std::ostream& fout)
 {
    fout << "Usage: sudoku_solver [options]\n"
            "options:\n"
@@ -71,7 +71,7 @@ void PrintUsage(std::ostream& fout)
         << std::endl;
 }
 
-void PrintVersion(std::ostream& fout)
+void printVersion(std::ostream& fout)
 {
    fout << "Sukodu Solver\n"
            "Copyright (C) 2012 by Alexander Voigt\n"

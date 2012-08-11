@@ -8,19 +8,19 @@
 
 int main(int argc, char* argv[])
 {
-   TOptions options = ParseOptions(argc, argv);
+   TOptions options = parseOptions(argc, argv);
 
    typedef TSudoku<unsigned char, 9, 9> sudoku_type;
    TSudokuFileReader<sudoku_type> sudokuFileReader(options.sudokuFileName);
-   sudoku_type sudoku = sudokuFileReader.Read();
+   sudoku_type sudoku = sudokuFileReader.read();
    std::cout << "\n" << sudoku << std::endl;
 
    TBacktrackingSolver<sudoku_type> solver(sudoku);
-   solver.Solve();
+   solver.solve();
 
-   std::cout << "solution: \n" << solver.GetSolution()
+   std::cout << "solution: \n" << solver.getSolution()
              << "\nsolution is "
-             << (solver.SolutionIsValid() ? "valid" : "invalid")
+             << (solver.solutionIsValid() ? "valid" : "invalid")
              << std::endl;
    return 0;
 }
