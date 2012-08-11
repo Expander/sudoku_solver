@@ -10,7 +10,7 @@ template <class TSudoku>
 class TBacktrackingSolver {
 public:
    TBacktrackingSolver(const TSudoku&);
-   ~TBacktrackingSolver();
+   ~TBacktrackingSolver() {}
 
    typedef typename TSudoku::value_type value_type;
    typedef typename TSudoku::row_type row_t;
@@ -37,11 +37,6 @@ template <class TSudoku>
 TBacktrackingSolver<TSudoku>::TBacktrackingSolver(const TSudoku& sudoku)
    : fSudoku(sudoku)
    , fSolutionFound(false)
-{
-}
-
-template <class TSudoku>
-TBacktrackingSolver<TSudoku>::~TBacktrackingSolver()
 {
 }
 
