@@ -16,8 +16,10 @@ int main(int argc, char* argv[])
    sudoku_type sudoku;
    try {
       sudoku = sudokuFileReader.read();
-   } catch (TSudokuFileReader<sudoku_type>::TErrorCannotOpenFile) {
+   } catch (TSudokuFileReader<sudoku_type>::TErrorCannotOpenFile&) {
       printUsage();
+      abort();
+   } catch (TSudokuFileReader<sudoku_type>::TError&) {
       abort();
    }
    std::cout << "\n" << sudoku << std::endl;

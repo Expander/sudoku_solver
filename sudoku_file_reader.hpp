@@ -11,7 +11,6 @@
 #include <sstream>
 #include <iterator>
 #include <cstdlib>
-#include <cassert>
 
 template <class TSudoku>
 class TSudokuFileReader {
@@ -19,7 +18,10 @@ public:
    TSudokuFileReader(const std::string&);
    ~TSudokuFileReader() {}
 
-   class TErrorCannotOpenFile {};
+   class TError {};
+   class TErrorCannotOpenFile : public TError {};
+   class TErrorMalformedFile : public TError {};
+
    typedef typename TSudoku::value_type value_type;
    typedef typename TSudoku::row_type row_t;
    typedef typename TSudoku::grid_type grid_t;
@@ -62,12 +64,11 @@ TSudoku TSudokuFileReader<TSudoku>::read() const
       // split line into tokens
       std::vector<std::string> tokens(split(line));
       if (tokens.size() != nCols) {
-         std::cerr << "Error: malformed line (more than "
-                   << static_cast<int>(nCols) << " words): "
-                   << line << std::endl;
-         break;
+         std::cerr << "Error: malformed line " << nLinesRead + 1
+                   << " (more than " << static_cast<int>(nCols)
+                   << " words): " << line << std::endl;
+         throw TErrorMalformedFile();
       }
-      assert(tokens.size() == nCols && "too many columns");
       sudoku[nLinesRead] = createRow(tokens);
       ++nLinesRead;
    }
