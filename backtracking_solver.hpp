@@ -1,6 +1,6 @@
 
-#ifndef SUDOKU_H
-#define SUDOKU_H
+#ifndef BACKTRACKING_SOLVER_H
+#define BACKTRACKING_SOLVER_H
 
 #include "sudoku_file_reader.hpp"
 
@@ -9,21 +9,21 @@
 #include <iostream>
 #include <cassert>
 
-template <class TReader, unsigned char nRows, unsigned char nCols> class TSudoku;
+template <class TReader, unsigned char nRows, unsigned char nCols> class TBacktrackingSolver;
 
 template <class TReader, unsigned char nRows, unsigned char nCols>
-std::ostream& operator<<(std::ostream&, const TSudoku<TReader, nRows, nCols>&);
+std::ostream& operator<<(std::ostream&, const TBacktrackingSolver<TReader, nRows, nCols>&);
 
 template <class TReader, unsigned char nRows = 9, unsigned char nCols = 9>
-class TSudoku {
+class TBacktrackingSolver {
 public:
-   TSudoku(const TReader&);
-   ~TSudoku();
+   TBacktrackingSolver(const TReader&);
+   ~TBacktrackingSolver();
 
    void Solve();
    bool SolutionIsValid() const;
 
-   friend std::ostream& operator<< <> (std::ostream&, const TSudoku<TReader, nRows, nCols>&);
+   friend std::ostream& operator<< <> (std::ostream&, const TBacktrackingSolver<TReader, nRows, nCols>&);
 
 private:
    typedef std::vector<unsigned char> row_t;
@@ -41,19 +41,19 @@ private:
 };
 
 template <class TReader, unsigned char nRows, unsigned char nCols>
-TSudoku<TReader, nRows, nCols>::TSudoku(const TReader& reader)
+TBacktrackingSolver<TReader, nRows, nCols>::TBacktrackingSolver(const TReader& reader)
    : fGrid(reader.Read())
    , fSolutionFound(false)
 {
 }
 
 template <class TReader, unsigned char nRows, unsigned char nCols>
-TSudoku<TReader, nRows, nCols>::~TSudoku()
+TBacktrackingSolver<TReader, nRows, nCols>::~TBacktrackingSolver()
 {
 }
 
 template <class TReader, unsigned char nRows, unsigned char nCols>
-void TSudoku<TReader, nRows, nCols>::Solve()
+void TBacktrackingSolver<TReader, nRows, nCols>::Solve()
 {
    // find non-empty field
    assert(fGrid.size() == nRows);
@@ -62,7 +62,7 @@ void TSudoku<TReader, nRows, nCols>::Solve()
 }
 
 template <class TReader, unsigned char nRows, unsigned char nCols>
-void TSudoku<TReader, nRows, nCols>::SolveField(unsigned char row, unsigned char col)
+void TBacktrackingSolver<TReader, nRows, nCols>::SolveField(unsigned char row, unsigned char col)
 {
    assert(row < nRows && "row out of range");
    assert(col < nCols && "col out of range");
@@ -93,7 +93,7 @@ void TSudoku<TReader, nRows, nCols>::SolveField(unsigned char row, unsigned char
 }
 
 template <class TReader, unsigned char nRows, unsigned char nCols>
-void TSudoku<TReader, nRows, nCols>::GetNextField(unsigned char row, unsigned char col, unsigned char& new_row, unsigned char& new_col) const
+void TBacktrackingSolver<TReader, nRows, nCols>::GetNextField(unsigned char row, unsigned char col, unsigned char& new_row, unsigned char& new_col) const
 {
    new_col = col;
    new_row = row;
@@ -106,25 +106,25 @@ void TSudoku<TReader, nRows, nCols>::GetNextField(unsigned char row, unsigned ch
 }
 
 template <class TReader, unsigned char nRows, unsigned char nCols>
-bool TSudoku<TReader, nRows, nCols>::IsLastField(unsigned char row, unsigned char col) const
+bool TBacktrackingSolver<TReader, nRows, nCols>::IsLastField(unsigned char row, unsigned char col) const
 {
    return row == nRows - 1 && col == nCols - 1;
 }
 
 template <class TReader, unsigned char nRows, unsigned char nCols>
-bool TSudoku<TReader, nRows, nCols>::FieldIsSolved(unsigned char row, unsigned char col) const
+bool TBacktrackingSolver<TReader, nRows, nCols>::FieldIsSolved(unsigned char row, unsigned char col) const
 {
    return fGrid[row][col] != 0;
 }
 
 template <class TReader, unsigned char nRows, unsigned char nCols>
-void TSudoku<TReader, nRows, nCols>::ClearField(unsigned char row, unsigned char col)
+void TBacktrackingSolver<TReader, nRows, nCols>::ClearField(unsigned char row, unsigned char col)
 {
    fGrid[row][col] = 0;
 }
 
 template <class TReader, unsigned char nRows, unsigned char nCols>
-bool TSudoku<TReader, nRows, nCols>::FieldValueIsValid(unsigned char r, unsigned char c) const
+bool TBacktrackingSolver<TReader, nRows, nCols>::FieldValueIsValid(unsigned char r, unsigned char c) const
 {
    unsigned char value = fGrid[r][c];
    assert(FieldIsSolved(r, c) && "field is not solved");
@@ -156,7 +156,7 @@ bool TSudoku<TReader, nRows, nCols>::FieldValueIsValid(unsigned char r, unsigned
 }
 
 template <class TReader, unsigned char nRows, unsigned char nCols>
-bool TSudoku<TReader, nRows, nCols>::SolutionIsValid() const
+bool TBacktrackingSolver<TReader, nRows, nCols>::SolutionIsValid() const
 {
    for (unsigned char row = 0; row < nRows; ++row) {
       for (unsigned char col = 0; col < nCols; ++col) {
@@ -168,7 +168,7 @@ bool TSudoku<TReader, nRows, nCols>::SolutionIsValid() const
 }
 
 template <class TReader, unsigned char nRows, unsigned char nCols>
-std::ostream& operator<<(std::ostream& sout, const TSudoku<TReader, nRows, nCols>& sudoku)
+std::ostream& operator<<(std::ostream& sout, const TBacktrackingSolver<TReader, nRows, nCols>& sudoku)
 {
    assert(sudoku.fGrid.size() == nRows);
    for (unsigned char row = 0; row < nRows; ++row) {
