@@ -120,7 +120,9 @@ template <class TSudoku>
 bool TBacktrackingSolver<TSudoku>::fieldValueIsValid(value_type r, value_type c) const
 {
    value_type value = fSudoku[r][c];
-   assert(fieldIsSolved(r, c) && "field is not solved");
+
+   if (!fieldIsSolved(r, c))
+      return false;
 
    // check if value appears in row
    for (value_type row = 0; row < nRows; ++row) {
