@@ -28,6 +28,7 @@ private:
    bool isLastField(value_type, value_type) const;
    bool fieldIsSolved(value_type, value_type) const;
    void clearField(value_type, value_type);
+   void setFieldValue(value_type, value_type, value_type);
 
    TSudoku fSudoku;
    bool    fSolutionFound;
@@ -71,7 +72,7 @@ void TBacktrackingSolver<TSudoku>::solveField(value_type row, value_type col)
    } else {
       // try values from 1 to nRows
       for (value_type value = 1; value <= nRows; ++value) {
-         fSudoku[row][col] = value;
+         setFieldValue(row,col,value);
          if (fieldValueIsValid(row, col)) {
             value_type new_row, new_col;
             getNextField(row, col, new_row, new_col);
@@ -114,6 +115,12 @@ template <class TSudoku>
 void TBacktrackingSolver<TSudoku>::clearField(value_type row, value_type col)
 {
    fSudoku[row][col] = 0;
+}
+
+template <class TSudoku>
+void TBacktrackingSolver<TSudoku>::setFieldValue(value_type row, value_type col, value_type value)
+{
+   fSudoku[row][col] = value;
 }
 
 template <class TSudoku>
