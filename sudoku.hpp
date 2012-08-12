@@ -24,6 +24,7 @@ public:
 
    row_type& operator[](const T&);
    const row_type& operator[](const T&) const;
+   bool operator==(const TSudoku<T,nRows,nCols>&) const;
 
    friend std::ostream& operator<< <> (std::ostream&, const TSudoku<T, nRows, nCols>&);
 
@@ -51,6 +52,18 @@ TSudoku<T, nRows, nCols>::operator[](const T& row_index) const
 {
    assert(row_index < fGrid.size() && "row_index out of range");
    return fGrid[row_index];
+}
+
+template <typename T, T nRows, T nCols>
+bool TSudoku<T, nRows, nCols>::operator==(const TSudoku<T,nRows,nCols>& other) const
+{
+   for (T row = 0; row < nRows; ++row) {
+      for (T col = 0; col < nCols; ++col) {
+         if (fGrid[row][col] != other[row][col])
+            return false;
+      }
+   }
+   return true;
 }
 
 template <typename T, T nRows, T nCols>
