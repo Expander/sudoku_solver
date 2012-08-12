@@ -17,7 +17,7 @@ public:
    typedef typename TSudoku::grid_type grid_t;
    enum { nRows = TSudoku::rows, nCols = TSudoku::cols };
 
-   const TSudoku& getSolution() const;
+   const TSudoku& getSolution();
    void solve();
    bool solutionIsValid() const;
 
@@ -42,8 +42,11 @@ TBacktrackingSolver<TSudoku>::TBacktrackingSolver(const TSudoku& sudoku)
 }
 
 template <class TSudoku>
-const TSudoku& TBacktrackingSolver<TSudoku>::getSolution() const
+const TSudoku& TBacktrackingSolver<TSudoku>::getSolution()
 {
+   if (!fSolutionFound)
+      solve();
+
    return fSudoku;
 }
 
