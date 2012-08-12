@@ -30,6 +30,6 @@ sudokus/s1.txt for an example.
 Help
 ----
 
-To get helg run
+To get help run
 
   $ ./sudoku_solver --help
