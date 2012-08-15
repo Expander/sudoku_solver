@@ -20,11 +20,13 @@ public:
    const TSudoku& getSolution();
    void solve();
    bool solutionIsValid() const;
+   void setStartingPoint(value_type, value_type);
 
 private:
    void solveField(value_type, value_type);
    bool fieldValueIsValid(value_type, value_type) const;
    void getNextField(value_type, value_type, value_type&, value_type&) const;
+   void getLastField(value_type, value_type, value_type&, value_type&) const;
    bool isLastField(value_type, value_type) const;
    bool fieldIsSolved(value_type, value_type) const;
    void clearField(value_type, value_type);
@@ -32,12 +34,20 @@ private:
 
    TSudoku fSudoku;
    bool    fSolutionFound;
+   value_type fStartingRow;
+   value_type fStartingColumn;
+   value_type fLastRow;
+   value_type fLastColumn;
 };
 
 template <class TSudoku>
 TBacktrackingSolver<TSudoku>::TBacktrackingSolver(const TSudoku& sudoku)
    : fSudoku(sudoku)
    , fSolutionFound(false)
+   , fStartingRow(0)
+   , fStartingColumn(0)
+   , fLastRow(nRows - 1)
+   , fLastColumn(nCols - 1)
 {
 }
 
@@ -55,7 +65,8 @@ void TBacktrackingSolver<TSudoku>::solve()
 {
    // find non-empty field
    fSolutionFound = false;
-   solveField(0, 0);
+   getLastField(fStartingRow, fStartingColumn, fLastRow, fLastColumn);
+   solveField(fStartingRow, fStartingColumn);
 }
 
 template <class TSudoku>
@@ -94,18 +105,42 @@ void TBacktrackingSolver<TSudoku>::getNextField(value_type row, value_type col, 
 {
    new_col = col;
    new_row = row;
+
+   if (isLastField(row, col))
+      return;
+
    if (col < nCols - 1) {
       ++new_col;
-   } else if (row < nRows - 1) {
-      ++new_row;
+   } else {
       new_col = 0;
+      if (row < nRows - 1)
+         ++new_row;
+      else
+         new_row = 0;
+   }
+}
+
+template <class TSudoku>
+void TBacktrackingSolver<TSudoku>::getLastField(value_type row, value_type col, value_type& last_row, value_type& last_col) const
+{
+   last_col = col;
+   last_row = row;
+
+   if (col > 0) {
+      --last_col;
+   } else {
+      last_col = nCols - 1;
+      if (row > 0)
+         --last_row;
+      else
+         last_row = nRows - 1;
    }
 }
 
 template <class TSudoku>
 bool TBacktrackingSolver<TSudoku>::isLastField(value_type row, value_type col) const
 {
-   return row == nRows - 1 && col == nCols - 1;
+   return row == fLastRow && col == fLastColumn;
 }
 
 template <class TSudoku>
@@ -170,6 +205,15 @@ bool TBacktrackingSolver<TSudoku>::solutionIsValid() const
       }
    }
    return true;
+}
+
+template <class TSudoku>
+void TBacktrackingSolver<TSudoku>::setStartingPoint(value_type row, value_type col)
+{
+   assert(row < nRows && "row out of range");
+   assert(col < nCols && "col out of range");
+   fStartingRow = row;
+   fStartingColumn = col;
 }
 
 #endif
