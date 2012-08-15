@@ -79,17 +79,16 @@ template <class TSudoku>
 typename TSudokuFileReader<TSudoku>::row_t
 TSudokuFileReader<TSudoku>::createRow(const std::vector<std::string>& tokens) const
 {
-   row_t row;
-   row.reserve(nCols);
-   for (std::vector<std::string>::const_iterator it = tokens.begin(),
-           end = tokens.end(); it != end; ++it) {
-      long value = atol(it->c_str());
+   row_t row(nCols);
+   assert(tokens.size() == nCols && "number of tokens != number of columns");
+   for (value_type i = 0; i < nCols; ++i) {
+      long value = atol(tokens[i].c_str());
       if (value < 0 || value > nCols) {
          std::cerr << "Error: value is not within [0," << nCols << "]: "
                    << value << std::endl;
          value = 0;
       }
-      row.push_back(static_cast<value_type>(value));
+      row[i] = static_cast<value_type>(value);
    }
    return row;
 }
