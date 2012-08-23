@@ -53,7 +53,6 @@ const TSudoku& TBacktrackingSolver<TSudoku>::getSolution()
 template <class TSudoku>
 void TBacktrackingSolver<TSudoku>::solve()
 {
-   // find non-empty field
    fSolutionFound = false;
    solveField(0, 0);
 }
