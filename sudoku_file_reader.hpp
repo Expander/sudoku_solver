@@ -65,8 +65,9 @@ TSudoku TSudokuFileReader<TSudoku>::read() const
       std::vector<std::string> tokens(split(line));
       if (tokens.size() != nCols) {
          std::cerr << "Error: malformed line " << nLinesRead + 1
-                   << " (more than " << static_cast<int>(nCols)
-                   << " words): " << line << std::endl;
+                   << " (has " << static_cast<int>(tokens.size())
+                   << " words, " << static_cast<int>(nCols)
+                   << " required): " << line << std::endl;
          throw TErrorMalformedFile();
       }
       sudoku[nLinesRead] = createRow(tokens);
