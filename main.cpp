@@ -11,7 +11,7 @@ int main(int argc, char* argv[])
 {
    TOptions options = parseOptions(argc, argv);
 
-   typedef TSudoku<unsigned char, 9, 9> sudoku_type;
+   typedef TSudoku<unsigned char, 9> sudoku_type;
    TSudokuFileReader<sudoku_type> sudokuFileReader(options.sudokuFileName);
    sudoku_type sudoku;
    try {
