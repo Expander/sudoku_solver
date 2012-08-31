@@ -1,17 +1,18 @@
 
 EXECUTABLE = sudoku_solver
-OBJECTS    = options.o
+SRCEXT     = cpp
+SRC        = $(wildcard *.$(SRCEXT))
+OBJECTS    = $(SRC:%.$(SRCEXT)=%.o)
+DEPS       = $(SRC:%.$(SRCEXT)=%.d)
 CXX        = g++
 CXXFLAGS   = -O3 -Wall -Wextra -pedantic
+CPPFLAGS  += -MMD -MP
 VERSION    = 0.2
 
-all: $(EXECUTABLE)
+$(EXECUTABLE): $(OBJECTS)
+	$(CXX) -o $@ $^
 
-$(EXECUTABLE): main.cpp $(OBJECTS)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $< $(OBJECTS) -o $@
-
-%.o : %.cpp %.hpp
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $<
+-include $(DEPS)
 
 .PHONY: tag release clean
 
@@ -24,4 +25,4 @@ release:
 	v$(VERSION) | gzip > sudoku_solver-$(VERSION).tar.gz
 
 clean:
-	rm -f $(OBJECTS) $(EXECUTABLE)
+	rm -f $(OBJECTS) $(EXECUTABLE) $(DEPS)
