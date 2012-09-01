@@ -87,7 +87,7 @@ TSudokuFileReader<TSudoku>::createRow(const std::vector<std::string>& tokens) co
       if (value < 0 || value > nCols) {
          std::cerr << "Error: value is not within [0," << nCols << "]: "
                    << value << std::endl;
-         value = 0;
+         throw TErrorMalformedFile();
       }
       row[i] = static_cast<value_type>(value);
    }
