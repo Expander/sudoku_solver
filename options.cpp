@@ -1,5 +1,6 @@
 
 #include "options.hpp"
+#include "config.hpp"
 
 #include <cstdlib>
 #include <cstring>
@@ -73,7 +74,7 @@ void printUsage(std::ostream& fout)
 
 void printVersion(std::ostream& fout)
 {
-   fout << "Sukodu Solver\n"
+   fout << "Sukodu Solver v" VERSION "\n"
            "Copyright (C) 2012 by Alexander Voigt\n"
            "Sukodu Solver comes with ABSOLUTELY NO WARRANTY.\n"
            "This program is free software: you are free"
