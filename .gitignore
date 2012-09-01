@@ -2,3 +2,4 @@
 *.d
 *~
 sudoku_solver
+config.hpp
