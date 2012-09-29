@@ -23,7 +23,9 @@ config.hpp: makefile
 %.d: %.$(SRCEXT)
 	$(CXX) -MM -MP -MG -o $@ $<
 
+ifneq "$(MAKECMDGOALS)" "clean"
 -include $(DEPS)
+endif
 
 .PHONY: tag release clean
 
