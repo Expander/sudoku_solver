@@ -6,12 +6,13 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <cstdint>
 
 int main(int argc, char* argv[])
 {
    TOptions options = parseOptions(argc, argv);
 
-   typedef TSudoku<unsigned char, 9> sudoku_type;
+   typedef TSudoku<uint8_t, 9> sudoku_type;
    TSudokuFileReader<sudoku_type> sudokuFileReader(options.sudokuFileName);
    sudoku_type sudoku;
    try {
@@ -27,6 +28,9 @@ int main(int argc, char* argv[])
    TBacktrackingSolver<sudoku_type> solver;
    const sudoku_type solution(solver.solve(sudoku));
 
-   std::cout << "solution: \n" << solution;
+   std::cout << "solution: \n" << solution
+             << "\nChecking solution ... "
+             << (solution.isValid() ? "valid" : "invalid")
+             << std::endl;
    return 0;
 }

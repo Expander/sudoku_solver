@@ -5,13 +5,14 @@
 #include <vector>
 #include <iostream>
 #include <cassert>
+#include <cstdint>
 
 template <typename T, T nRows> class TSudoku;
 
 template <typename T, T nRows>
 std::ostream& operator<<(std::ostream&, const TSudoku<T, nRows>&);
 
-template <typename T = unsigned char, T nRows = 9>
+template <typename T = uint8_t, T nRows = 9>
 class TSudoku {
 public:
    TSudoku();
@@ -23,6 +24,7 @@ public:
    typedef std::vector<row_type> grid_type;
 
    bool fieldValueIsValid(T, T) const;
+   bool isValid() const;
    row_type& operator[](const T&);
    const row_type& operator[](const T&) const;
    bool operator==(const TSudoku<T,nRows>&) const;
@@ -42,6 +44,8 @@ TSudoku<T, nRows>::TSudoku()
 template <typename T, T nRows>
 bool TSudoku<T, nRows>::fieldValueIsValid(T r, T c) const
 {
+   assert(r < fGrid.size() && "row_index out of range");
+
    const value_type value = fGrid[r][c];
 
    if (value < 1 || value > nRows)
@@ -67,6 +71,18 @@ bool TSudoku<T, nRows>::fieldValueIsValid(T r, T c) const
    for (value_type row = sub_row_start; row < sub_row_end; ++row) {
       for (value_type col = sub_col_start; col < sub_col_end; ++col) {
          if (col != c && row != r && fGrid[row][col] == value)
+            return false;
+      }
+   }
+   return true;
+}
+
+template <typename T, T nRows>
+bool TSudoku<T, nRows>::isValid() const
+{
+   for (value_type row = 0; row < nRows; ++row) {
+      for (value_type col = 0; col < nRows; ++col) {
+         if (!fieldValueIsValid(row, col))
             return false;
       }
    }
