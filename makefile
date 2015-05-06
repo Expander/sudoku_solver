@@ -5,7 +5,8 @@ SRC        = $(wildcard *.$(SRCEXT))
 OBJECTS    = $(SRC:%.$(SRCEXT)=%.o)
 DEPS       = $(SRC:%.$(SRCEXT)=%.d)
 CXX        = g++
-CXXFLAGS   = -O3 -Wall -Wextra -pedantic
+CXXFLAGS   = -std=c++11 -O3 -Wall -Wextra -pedantic
+CXXFLAGSDEP= -std=c++11
 VERSION    = 0.2
 
 $(EXECUTABLE): $(OBJECTS)
@@ -21,7 +22,7 @@ config.hpp: makefile
 	mv $@-t $@
 
 %.d: %.$(SRCEXT)
-	$(CXX) -MM -MP -MG -o $@ $<
+	$(CXX) $(CXXFLAGSDEP) -MM -MP -MG -o $@ $<
 
 ifneq "$(MAKECMDGOALS)" "clean"
 -include $(DEPS)
