@@ -22,6 +22,7 @@ public:
    typedef std::vector<T> row_type;
    typedef std::vector<row_type> grid_type;
 
+   bool fieldValueIsValid(T, T) const;
    row_type& operator[](const T&);
    const row_type& operator[](const T&) const;
    bool operator==(const TSudoku<T,nRows>&) const;
@@ -36,6 +37,40 @@ template <typename T, T nRows>
 TSudoku<T, nRows>::TSudoku()
    : fGrid(rows, row_type(cols, 0))
 {
+}
+
+template <typename T, T nRows>
+bool TSudoku<T, nRows>::fieldValueIsValid(T r, T c) const
+{
+   const value_type value = fGrid[r][c];
+
+   if (value < 1 || value > nRows)
+      return false;
+
+   // check if value appears in row
+   for (value_type row = 0; row < nRows; ++row) {
+      if (row != r && fGrid[row][c] == value)
+         return false;
+   }
+
+   // check if value appears in column
+   for (value_type col = 0; col < nRows; ++col) {
+      if (col != c && fGrid[r][col] == value)
+         return false;
+   }
+
+   // check if value appears in sub-square
+   const value_type sub_row_start = 3 * (r / 3);
+   const value_type sub_row_end   = sub_row_start + 3;
+   const value_type sub_col_start = 3 * (c / 3);
+   const value_type sub_col_end   = sub_col_start + 3;
+   for (value_type row = sub_row_start; row < sub_row_end; ++row) {
+      for (value_type col = sub_col_start; col < sub_col_end; ++col) {
+         if (col != c && row != r && fGrid[row][col] == value)
+            return false;
+      }
+   }
+   return true;
 }
 
 template <typename T, T nRows>

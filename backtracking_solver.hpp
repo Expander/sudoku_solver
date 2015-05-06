@@ -21,7 +21,6 @@ public:
 
 private:
    void solveField(value_type, value_type);
-   bool fieldValueIsValid(value_type, value_type) const;
    void getNextField(value_type, value_type, value_type&, value_type&) const;
    bool isLastField(value_type, value_type) const;
    bool fieldIsSolved(value_type, value_type) const;
@@ -67,7 +66,7 @@ void TBacktrackingSolver<TSudoku>::solveField(value_type row, value_type col)
       // try values from 1 to nRows
       for (value_type value = 1; value <= nRows; ++value) {
          setFieldValue(row,col,value);
-         if (fieldValueIsValid(row, col)) {
+         if (fSudoku.fieldValueIsValid(row, col)) {
             value_type new_row, new_col;
             getNextField(row, col, new_row, new_col);
             solveField(new_row, new_col);
@@ -115,40 +114,6 @@ template <class TSudoku>
 void TBacktrackingSolver<TSudoku>::setFieldValue(value_type row, value_type col, value_type value)
 {
    fSudoku[row][col] = value;
-}
-
-template <class TSudoku>
-bool TBacktrackingSolver<TSudoku>::fieldValueIsValid(value_type r, value_type c) const
-{
-   const value_type value = fSudoku[r][c];
-
-   if (!fieldIsSolved(r, c))
-      return false;
-
-   // check if value appears in row
-   for (value_type row = 0; row < nRows; ++row) {
-      if (row != r && fSudoku[row][c] == value)
-         return false;
-   }
-
-   // check if value appears in column
-   for (value_type col = 0; col < nCols; ++col) {
-      if (col != c && fSudoku[r][col] == value)
-         return false;
-   }
-
-   // check if value appears in sub-square
-   const value_type sub_row_start = 3 * (r / 3);
-   const value_type sub_row_end   = sub_row_start + 3;
-   const value_type sub_col_start = 3 * (c / 3);
-   const value_type sub_col_end   = sub_col_start + 3;
-   for (value_type row = sub_row_start; row < sub_row_end; ++row) {
-      for (value_type col = sub_col_start; col < sub_col_end; ++col) {
-         if (col != c && row != r && fSudoku[row][col] == value)
-            return false;
-      }
-   }
-   return true;
 }
 
 #endif
