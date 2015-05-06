@@ -72,7 +72,7 @@ std::ostream& operator<<(std::ostream& sout, const TSudoku<T, nRows>& sudoku)
    assert(sudoku.fGrid.size() == nRows);
    for (T row = 0; row < nRows; ++row) {
       if (row != 0 && row % 3 == 0)
-         sout << "\n";
+         sout << '\n';
       for (T col = 0; col < nRows; ++col) {
          assert(sudoku.fGrid[row].size() == nRows);
          if (col != 0) {
@@ -83,7 +83,7 @@ std::ostream& operator<<(std::ostream& sout, const TSudoku<T, nRows>& sudoku)
          }
          sout << static_cast<int>(sudoku.fGrid[row][col]);
       }
-      sout << "\n";
+      sout << '\n';
    }
    return sout;
 }

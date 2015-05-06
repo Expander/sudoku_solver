@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
    } catch (TSudokuFileReader<sudoku_type>::TError&) {
       return 1;
    }
-   std::cout << "\n" << sudoku << std::endl;
+   std::cout << '\n' << sudoku << std::endl;
 
    TBacktrackingSolver<sudoku_type> solver(sudoku);
    solver.solve();
