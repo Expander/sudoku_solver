@@ -24,8 +24,8 @@ int main(int argc, char* argv[])
    }
    std::cout << '\n' << sudoku << std::endl;
 
-   TBacktrackingSolver<sudoku_type> solver(sudoku);
-   solver.solve();
+   TBacktrackingSolver<sudoku_type> solver;
+   solver.solve(sudoku);
 
    std::cout << "solution: \n" << solver.getSolution()
              << "\nsolution is "

@@ -9,7 +9,7 @@
 template <class TSudoku>
 class TBacktrackingSolver {
 public:
-   TBacktrackingSolver(const TSudoku&);
+   TBacktrackingSolver();
    ~TBacktrackingSolver() {}
 
    typedef typename TSudoku::value_type value_type;
@@ -18,7 +18,7 @@ public:
    enum { nRows = TSudoku::rows, nCols = TSudoku::cols };
 
    const TSudoku& getSolution();
-   void solve();
+   void solve(const TSudoku&);
    bool solutionIsValid() const;
 
 private:
@@ -35,8 +35,8 @@ private:
 };
 
 template <class TSudoku>
-TBacktrackingSolver<TSudoku>::TBacktrackingSolver(const TSudoku& sudoku)
-   : fSudoku(sudoku)
+TBacktrackingSolver<TSudoku>::TBacktrackingSolver()
+   : fSudoku()
    , fSolutionFound(false)
 {
 }
@@ -45,14 +45,15 @@ template <class TSudoku>
 const TSudoku& TBacktrackingSolver<TSudoku>::getSolution()
 {
    if (!fSolutionFound)
-      solve();
+      solve(fSudoku);
 
    return fSudoku;
 }
 
 template <class TSudoku>
-void TBacktrackingSolver<TSudoku>::solve()
+void TBacktrackingSolver<TSudoku>::solve(const TSudoku& sudoku)
 {
+   fSudoku = sudoku;
    fSolutionFound = false;
    solveField(0, 0);
 }
