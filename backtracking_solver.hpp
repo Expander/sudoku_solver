@@ -120,7 +120,7 @@ void TBacktrackingSolver<TSudoku>::setFieldValue(value_type row, value_type col,
 template <class TSudoku>
 bool TBacktrackingSolver<TSudoku>::fieldValueIsValid(value_type r, value_type c) const
 {
-   value_type value = fSudoku[r][c];
+   const value_type value = fSudoku[r][c];
 
    if (!fieldIsSolved(r, c))
       return false;
