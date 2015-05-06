@@ -18,7 +18,6 @@ public:
    enum { nRows = TSudoku::rows, nCols = TSudoku::cols };
 
    const TSudoku& solve(const TSudoku&);
-   bool solutionIsValid() const;
 
 private:
    void solveField(value_type, value_type);
@@ -146,18 +145,6 @@ bool TBacktrackingSolver<TSudoku>::fieldValueIsValid(value_type r, value_type c)
    for (value_type row = sub_row_start; row < sub_row_end; ++row) {
       for (value_type col = sub_col_start; col < sub_col_end; ++col) {
          if (col != c && row != r && fSudoku[row][col] == value)
-            return false;
-      }
-   }
-   return true;
-}
-
-template <class TSudoku>
-bool TBacktrackingSolver<TSudoku>::solutionIsValid() const
-{
-   for (value_type row = 0; row < nRows; ++row) {
-      for (value_type col = 0; col < nCols; ++col) {
-         if (!fieldValueIsValid(row, col))
             return false;
       }
    }

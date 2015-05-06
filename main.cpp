@@ -27,9 +27,6 @@ int main(int argc, char* argv[])
    TBacktrackingSolver<sudoku_type> solver;
    const sudoku_type solution(solver.solve(sudoku));
 
-   std::cout << "solution: \n" << solution
-             << "\nsolution is "
-             << (solver.solutionIsValid() ? "valid" : "invalid")
-             << std::endl;
+   std::cout << "solution: \n" << solution;
    return 0;
 }
