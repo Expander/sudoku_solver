@@ -24,8 +24,12 @@ config.hpp: makefile
 %.d: %.$(SRCEXT)
 	$(CXX) $(CXXFLAGSDEP) -MM -MP -MG -o $@ $<
 
-ifneq "$(MAKECMDGOALS)" "clean"
+ifneq ($(MAKECMDGOALS),clean)
+ifneq ($(MAKECMDGOALS),release)
+ifneq ($(MAKECMDGOALS),tag)
 -include $(DEPS)
+endif
+endif
 endif
 
 .PHONY: tag release clean
