@@ -1,13 +1,13 @@
 
-EXECUTABLE = sudoku_solver
-SRCEXT     = cpp
-SRC        = $(wildcard *.$(SRCEXT))
-OBJECTS    = $(SRC:%.$(SRCEXT)=%.o)
-DEPS       = $(SRC:%.$(SRCEXT)=%.d)
-CXX        = g++
-CXXFLAGS   = -std=c++11 -O3 -Wall -Wextra -pedantic
-CXXFLAGSDEP= -std=c++11
-VERSION    = 0.3
+EXECUTABLE  := sudoku_solver
+SRCEXT      := cpp
+SRC         := $(wildcard *.$(SRCEXT))
+OBJECTS     := $(SRC:%.$(SRCEXT)=%.o)
+DEPS        := $(SRC:%.$(SRCEXT)=%.d)
+CXX         := g++
+CXXFLAGS    := -std=c++11 -O3 -Wall -Wextra -pedantic
+CXXFLAGSDEP := -std=c++11
+VERSION     := 0.3
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CXX) -o $@ $^
