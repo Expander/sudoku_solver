@@ -25,8 +25,8 @@ public:
 
    bool fieldValueIsValid(T, T) const;
    bool isValid() const;
-   row_type& operator[](const T&);
-   const row_type& operator[](const T&) const;
+   row_type& operator[](T);
+   const row_type& operator[](T) const;
    bool operator==(const TSudoku<T,nRows>&) const;
 
    friend std::ostream& operator<< <> (std::ostream&, const TSudoku<T, nRows>&);
@@ -91,7 +91,7 @@ bool TSudoku<T, nRows>::isValid() const
 
 template <typename T, T nRows>
 typename TSudoku<T, nRows>::row_type&
-TSudoku<T, nRows>::operator[](const T& row_index)
+TSudoku<T, nRows>::operator[](T row_index)
 {
    assert(row_index < fGrid.size() && "row_index out of range");
    return fGrid[row_index];
@@ -99,7 +99,7 @@ TSudoku<T, nRows>::operator[](const T& row_index)
 
 template <typename T, T nRows>
 const typename TSudoku<T, nRows>::row_type&
-TSudoku<T, nRows>::operator[](const T& row_index) const
+TSudoku<T, nRows>::operator[](T row_index) const
 {
    assert(row_index < fGrid.size() && "row_index out of range");
    return fGrid[row_index];
