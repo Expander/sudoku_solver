@@ -25,6 +25,7 @@ public:
 
    bool fieldValueIsValid(T, T) const;
    bool isValid() const;
+   void reset();
    row_type& operator[](T);
    const row_type& operator[](T) const;
    bool operator==(const TSudoku<T,nRows>&) const;
@@ -87,6 +88,13 @@ bool TSudoku<T, nRows>::isValid() const
       }
    }
    return true;
+}
+
+template <typename T, T nRows>
+void TSudoku<T, nRows>::reset()
+{
+   for (value_type row = 0; row < nRows; ++row)
+      fGrid[row].assign(nRows, 0);
 }
 
 template <typename T, T nRows>
